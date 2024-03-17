@@ -8,8 +8,7 @@ from pathway.xpacks.llm.splitters import TokenCountSplitter
 load_dotenv()
 
 dropbox_folder_path = os.environ.get("DROPBOX_LOCAL_FOLDER_PATH", "/usr/local/documents")
-
-
+file_pattern=os.environ.get("FILE_PATTERNS", "*.pdf")
 def run(host, port):
     # Given a user search query
     query, response_writer = pw.io.http.rest_connector(
@@ -23,7 +22,9 @@ def run(host, port):
     input_data = pw.io.fs.read(
         dropbox_folder_path,
         mode="streaming",
+        object_pattern=file_pattern,
         format="binary",
+        # persistent_id="persistent_state",
         autocommit_duration_ms=50,
     )
     
