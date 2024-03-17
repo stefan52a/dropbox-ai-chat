@@ -24,7 +24,7 @@ def run(host, port):
         mode="streaming",
         object_pattern=file_pattern,
         format="binary",
-        # persistent_id="persistent_state",
+        persistent_id="persistent_state",
         autocommit_duration_ms=50,
     )
     
@@ -54,8 +54,11 @@ def run(host, port):
     # Feed the prompt to ChatGPT and obtain the generated answer.
     response_writer(responses)
 
+    persistence_backend = pw.persistence.Backend.filesystem("./state/")
+    persistence_config = pw.persistence.Config.simple_config(persistence_backend)
+
     # Run the pipeline
-    pw.run()
+    pw.run(persistence_config=persistence_config)
 
 
 class QueryInputSchema(pw.Schema):
